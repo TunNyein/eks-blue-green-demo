@@ -60,9 +60,6 @@ resource "aws_eks_node_group" "eks_nodes" {
 
   depends_on = [
     aws_eks_cluster.eks_cluster
-    # aws_iam_role_policy_attachment.node_policy1,
-    # aws_iam_role_policy_attachment.node_policy2,
-    # aws_iam_role_policy_attachment.node_policy3,
-    # aws_iam_role_policy_attachment.node_policy4
+
   ]
 }
