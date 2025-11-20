@@ -23,7 +23,7 @@ resource "aws_eks_cluster" "eks" {
     
 
     # Only allowed IPs for public API access
-    public_access_cidrs = var.allowed_api_cidrs
+    # public_access_cidrs = var.allowed_api_cidrs
 
   }
 

@@ -7,7 +7,108 @@ https://app.datadoghq.com/fleet/install-agent/latest?platform=kubernetes&_gl=1*x
 
 - Create secret 
 
-# kubectl create secret generic datadog-secret --from-literal api-key=6ec7cd6051dcf2e12d9fd50afc92e582 -n datadog-agent
+# kubectl create secret generic datadog-secret --from-literal api-key=6ec7cd605ddd2e12d9fdd2e582dd -n datadog-agent
 
 # Apply Datadog agent yaml 
 
+
+# update kubeconfig for eks admin
+
+aws eks update-kubeconfig --region ap-southeast-1 --name eks-cluster --alias eks-admin --profile eks-admin
+
+# verify cluster access
+1. kubectl get ns 
+2. kubectl get all -n kube-system
+
+# Create namespaces
+kubectl create ns details
+kubectl create ns reviews
+kubectl create ns ratings
+kubectl create ns productpage
+
+# Apply access entry 
+ terraform apply --auto-approve 
+
+# Apply rbac.yaml
+
+kubectl apply -f rbac.yaml
+
+# configure aws IAM profiles for junior & lead ops engineers 
+
+# update kubeconfig for junior & Lead ops engineers
+1. aws eks update-kubeconfig --region ap-southeast-1 --name eks-cluster --alias junior-ops-engineer --profile junior-ops-engineer
+
+2. aws eks update-kubeconfig --region ap-southeast-1 --name eks-cluster --alias lead-ops-engineer --profile lead-ops-engineer
+
+# check contexts
+kubectl config get-contexts
+
+# verify permission on each namesapce 
+
+![alt text](<Screenshot from 2025-11-20 22-53-34.png>)
+
+
+# Run micro services at their respective namespace by applying blue-bookinfo.yaml
+kubectl apply -f blue-bookinfo.yaml
+# apply externa svc.yaml to producate namespace 
+kubectl apply -f external-svc.yaml 
+
+# apply bokinfo-ingress.yaml under producate namespace
+kubectl apply -f bokinfo-ingress.yaml
+
+
+### Install AWS Load Balancer Controller
+
+IAM OIDC provider (if not already created):
+
+eksctl utils associate-iam-oidc-provider --cluster eks-cluster --approve --profile eks-admin
+
+
+Create IAM policy for the controller:
+
+curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
+
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam-policy.json --profile eks-admin
+
+
+Create IAM service account for the controller:
+
+eksctl create iamserviceaccount --cluster eks-cluster --namespace kube-system --name aws-load-balancer-controller --attach-policy-arn arn:aws:iam::767397836388:policy/AWSLoadBalancerControllerIAMPolicy --approve --profile eks-admin
+
+
+Install the controller using Helm:
+
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=eks-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  --set region=ap-southeast-1 \
+  --set vpcId=vpc-01b870407d8415ffc
+
+############################3
+
+  kubectl logs -n kube-system -l app.kubernetes.io/name=aws-load-balancer-controller
+
+
+  for i in {1..20}; do curl -s http://<ALB_DNS> | grep "version"; done
+
+for i in {1..30}; do 
+  curl -s bookinfo.tunlab.xyz | grep -E "v1|v2"
+done
+
+
+# Apply gree-bookinfo.yaml 
+
+# Reapply bookinfo-ingress.yaml
+
+helm uninstall aws-load-balancer-controller -n kube-system
+
+$ kubectl get ingress -n productpage
+NAME               CLASS   HOSTS                 ADDRESS                                                                       PORTS   AGE
+bookinfo-ingress   alb     bookinfo.tunlab.xyz   k8s-productp-bookinfo-a1e73bb215-747657617.ap-southeast-1.elb.amazonaws.com   80      96m
+$ kubectl delete  ingress bookinfo-ingress -n productpage
+ingress.networking.k8s.io "bookinfo-ingress" deleted

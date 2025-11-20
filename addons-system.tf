@@ -40,7 +40,7 @@ resource "aws_eks_addon" "vpc_cni" {
 resource "aws_eks_addon" "kube_proxy" {
   cluster_name      = aws_eks_cluster.eks.name
   addon_name        = "kube-proxy"
-  addon_version     = "v1.33.0-eksbuild.1"  # match your EKS version
+  
  
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
@@ -50,21 +50,21 @@ resource "aws_eks_addon" "kube_proxy" {
   ]
 }
 
-# -----------------------------------------
-# Metrics Server Add-on (AWS managed)
-# -----------------------------------------
-resource "aws_eks_addon" "metrics_server" {
-  cluster_name      = aws_eks_cluster.eks.name
-  addon_name        = "eks-metrics-server"
-  addon_version     = "v0.7.2-eksbuild.1"
+# # -----------------------------------------
+# # Metrics Server Add-on (AWS managed)
+# # -----------------------------------------
+# resource "aws_eks_addon" "metrics_server" {
+#   cluster_name      = aws_eks_cluster.eks.name
+#   addon_name        = "eks-metrics-server"
   
-  resolve_conflicts_on_create = "OVERWRITE"
-  resolve_conflicts_on_update = "OVERWRITE"
+  
+#   resolve_conflicts_on_create = "OVERWRITE"
+#   resolve_conflicts_on_update = "OVERWRITE"
 
-  depends_on = [
-    aws_eks_node_group.eks_nodes
-  ]
-}
+#   depends_on = [
+#     aws_eks_node_group.eks_nodes
+#   ]
+# }
 
 
 # # -----------------------------------------

@@ -1,38 +1,11 @@
-# Copyright Istio Authors
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-
 ##################################################################################################
-# This file defines the services, service accounts, and deployments for the Bookinfo sample.
-#
-# To apply all 4 Bookinfo services, their corresponding service accounts, and deployments:
-#
-#   kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
-#
-# Alternatively, you can deploy any resource separately:
-#
-#   kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml -l service=reviews # reviews Service
-#   kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml -l account=reviews # reviews ServiceAccount
-#   kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml -l app=reviews,version=v3 # reviews-v3 Deployment
-##################################################################################################
-
-##################################################################################################
-# Details service
+# Details service - Green (v2)
 ##################################################################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: details-v2
+  namespace: details
   labels:
     app: details
     version: v2
@@ -51,18 +24,19 @@ spec:
       serviceAccountName: bookinfo-details
       containers:
       - name: details
-        image: docker.io/tunnyeinmua/tun-details-v1:1.20.3
+        image: docker.io/hellocloud/autobahn-details-v1:1.20.3
         ports:
         - containerPort: 9080
 
 ---
 ##################################################################################################
-# Ratings service
+# Ratings service - Green (v2)
 ##################################################################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ratings-v2
+  namespace: ratings
   labels:
     app: ratings
     version: v2
@@ -81,21 +55,24 @@ spec:
       serviceAccountName: bookinfo-ratings
       containers:
       - name: ratings
-        image: docker.io/tunnyeinmua/tun-ratings-v1:1.20.3
+        image: docker.io/hellocloud/autobahn-ratings-v1:1.20.3
         ports:
         - containerPort: 9080
 
 ---
 ################################################################################
-# Reviews Deployment v2 - green-1
+# Reviews Deployment v2 - Green Pods
 ################################################################################
+# v2-1
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: reviews-v2-1
+  namespace: reviews
   labels:
     app: reviews
     version: v2
+    instance: v2-1
 spec:
   replicas: 1
   selector:
@@ -113,34 +90,33 @@ spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: docker.io/tunnyeinmua/tun-reviews-v1:1.20.3
-        imagePullPolicy: IfNotPresent
+        image: docker.io/hellocloud/autobahn-reviews-v1:1.20.3
+        ports:
+        - containerPort: 9080
         env:
         - name: LOG_DIR
           value: "/tmp/logs"
-        ports:
-        - containerPort: 9080
         volumeMounts:
         - name: tmp
           mountPath: /tmp
         - name: wlp-output
           mountPath: /opt/ibm/wlp/output
       volumes:
-      - name: wlp-output
-        emptyDir: {}
       - name: tmp
         emptyDir: {}
+      - name: wlp-output
+        emptyDir: {}
 ---
-################################################################################
-# Reviews Deployment v2 - green-2
-################################################################################
+# v2-2
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: reviews-v2-2
+  namespace: reviews
   labels:
     app: reviews
     version: v2
+    instance: v2-2
 spec:
   replicas: 1
   selector:
@@ -158,34 +134,33 @@ spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: docker.io/tunnyeinmua/tun-reviews-v2:1.20.3
-        imagePullPolicy: IfNotPresent
+        image: docker.io/hellocloud/autobahn-reviews-v2:1.20.3
+        ports:
+        - containerPort: 9080
         env:
         - name: LOG_DIR
           value: "/tmp/logs"
-        ports:
-        - containerPort: 9080
         volumeMounts:
         - name: tmp
           mountPath: /tmp
         - name: wlp-output
           mountPath: /opt/ibm/wlp/output
       volumes:
-      - name: wlp-output
-        emptyDir: {}
       - name: tmp
         emptyDir: {}
+      - name: wlp-output
+        emptyDir: {}
 ---
-################################################################################
-# Reviews Deployment v2 - green-3
-################################################################################
+# v2-3
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: reviews-v2-3
+  namespace: reviews
   labels:
     app: reviews
     version: v2
+    instance: v2-3
 spec:
   replicas: 1
   selector:
@@ -203,31 +178,33 @@ spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: docker.io/tunnyeinmua/tun-reviews-v3:1.20.3
-        imagePullPolicy: IfNotPresent
+        image: docker.io/hellocloud/autobahn-reviews-v3:1.20.3
+        ports:
+        - containerPort: 9080
         env:
         - name: LOG_DIR
           value: "/tmp/logs"
-        ports:
-        - containerPort: 9080
         volumeMounts:
         - name: tmp
           mountPath: /tmp
         - name: wlp-output
           mountPath: /opt/ibm/wlp/output
       volumes:
-      - name: wlp-output
-        emptyDir: {}
       - name: tmp
         emptyDir: {}
+      - name: wlp-output
+        emptyDir: {}
+
 ---
 ##################################################################################################
-# Productpage services
+# Productpage Services - Blue & Green
 ##################################################################################################
+# Green (v2) service
 apiVersion: v1
 kind: Service
 metadata:
   name: productpage-green
+  namespace: productpage
   labels:
     app: productpage
     version: v2
@@ -239,11 +216,17 @@ spec:
   selector:
     app: productpage
     version: v2
+
 ---
+##################################################################################################
+# Productpage Deployments - Blue & Green
+##################################################################################################
+# Green (v2)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: productpage-v2
+  namespace: productpage
   labels:
     app: productpage
     version: v2
@@ -261,7 +244,7 @@ spec:
     spec:
       containers:
         - name: productpage
-          image: docker.io/tunnyeinmua/tun-productpage-v1:1.20.3
+          image: docker.io/hellocloud/autobahn-productpage-v1:1.20.3
           ports:
             - containerPort: 9080
           volumeMounts:
@@ -270,4 +253,3 @@ spec:
       volumes:
         - name: tmp
           emptyDir: {}
-
