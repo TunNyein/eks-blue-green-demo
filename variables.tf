@@ -8,7 +8,7 @@ variable "aws_region" {
 variable "aws_profile" {
   description = "AWS CLI profile name"
   type        = string
-  default     = "master-console-adm"
+  default     = "eks-admin"
 }
 
 # VPC
@@ -21,13 +21,13 @@ variable "vpc_address_space" {
 variable "vpc_prefix" {
   description = "Prefix for naming VPC resources"
   type        = string
-  default     = "team-7"
+  default     = "eks"
 }
 
 variable "vpc_environment" {
   description = "Environment name"
   type        = string
-  default     = "dev"
+  default     = "production"
 }
 
 variable "vpc_public_subnet_cidr" {
@@ -53,7 +53,7 @@ variable "eks_version" {
 variable "node_instance_type" {
   description = "EC2 instance type for EKS worker nodes"
   type        = string
-  default     = "t3.large"
+  default     = "t3.medium"
 }
 
 variable "desired_capacity" {
@@ -73,6 +73,14 @@ variable "min_capacity" {
   type        = number
   default     = 2
 }
+
+# variable "allowed_api_cidrs" {
+#   type    = list(string)
+#   description = "List of CIDR blocks allowed to access the cluster"
+#   default = ["203.0.113.10/32"]  # Replace with your allowed IP(s)
+# }
+  
+
 
 # variable "ec2_ssh_keypair_name" {
 #   type        = string
