@@ -17,7 +17,7 @@ The cluster runs in private subnets, and all administrative access is done using
 A detailed operational workflow is available in: eks-blue-greee-runbook.md
 
 ## Architecture
-![alt text](assets/architecture.svg)
+![alt text](assets/architecture.png)
 
 ## Cleanup
 
