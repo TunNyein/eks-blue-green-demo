@@ -136,6 +136,39 @@ k8s-prod-bookinfo-1234567890.elb.amazonaws.com
 - Save record.
 
 ```
-After DNS propagates (1–3 min), open:
+After DNS propagates (1–3 min), open: You should see the original BLUE productpage
 
 http://bookinfo.tunlab.xyz
+
+## 6. Traffic Switching (Blue/Green)
+  ### I. Deploy Green Version
+```bash
+# Deploy the Green Version (New) Microservices
+kubectl apply -f green-bookinfo.yaml
+  ```
+  ### II. Verify Service and Deployments 
+  ```bash
+# Deploy the Green Version (New) Microservices
+kubectl get svc -n productpage 
+kubectl get deplyoments -n deatils / rating / reviews
+  ```
+### III. Change Traffic Weight
+```bash
+# Reapply bookinfo-ingress.yaml after changing traffic weight
+# (Example: Blue 0%, Green 100%)
+kubectl apply -f bookinfo-ingress.yaml -n productpage
+
+# Verify traffic shifting by accessing the ALB DNS name.
+  ```
+## 7. Monitoring (Datadog) Setup
+Setup Datadog to gather Metrics, Logs, and Traces from the EKS Cluster.
+### Create Datadog Account
+```bash
+   -  Install Add on datadog operator in EKS Console or install by helm 
+   -  Create secret 
+      # kubectl create secret generic datadog-secret --from-literal api-key=xxxxx -n   datadog-agent
+   -  Enable customize your observability coverage
+   -  Create the datadog-agent.yaml file and Copy the context into it
+      # kubectl apply -f datadog-agent.yaml
+```
+- [Datadog Helm Chart Documentation](https://app.datadoghq.com/fleet/install-agent/latest?platform=kubernetes&_gl=1*xlxlw8*_gcl_au*MTUxMDgxNjk2NC4xNzYzMDQ0MTc4LjYyNTI3ODM0LjE3NjM0Mzc1MDIuMTc2MzQzNzUxMQ..*_ga*MTE4MDUzMjQ5Mi4xNzYzNDM3MDgx*_ga_KN80RDFSQK*czE3NjM0MzcwODEkbzEkZzEkdDE3NjM0MzgxMTkkajEzJGwwJGgxOTc4MDA1NjUx)
