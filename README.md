@@ -13,13 +13,13 @@ Two IAM users are defined for controlled cluster access:
 
 The project includes:
 
-BookInfo microservices, deployed into separate namespaces
+- BookInfo microservices, deployed into separate namespaces
 
-AWS Load Balancer Controller (LBC) for gradual traffic shifting between Blue and Green versions
+- AWS Load Balancer Controller (LBC) for gradual traffic shifting between Blue and Green versions
 
-IAM + EKS Access Entries + Kubernetes RBAC for enforcing strong access separation
+- IAM + EKS Access Entries + Kubernetes RBAC for enforcing strong access separation
 
-Datadog for full-stack monitoring (cluster, workloads, logs, and ALB insights)
+- Datadog for full-stack monitoring (cluster, workloads, logs, and ALB insights)
 
 
 
@@ -29,6 +29,7 @@ A complete operational workflow is documented in:
 ## Architecture
 ![alt text](assets/architecture.png)
 
+---
 ## Repository Structure
 ```bash
 .
@@ -67,5 +68,4 @@ A complete operational workflow is documented in:
 
 ```
 
-A complete operational workflow is documented in:
-📘 eks-blue-greee-runbook.md
+Follow the Runbook: 📘 eks-blue-greee-runbook.md
