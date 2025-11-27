@@ -20,7 +20,7 @@ The project includes:
 
 - junior-ops-engineer — read-only (view) permissions on all namespaces
 
-## Follow up complete operational workflow is documented in: 📘 infra/eks-blue-greee-runbook.md
+## Follow the complete operational guideline in: 📘 infra/eks-blue-green-runbook.md
 
 ## Architecture
 
@@ -28,22 +28,23 @@ The project includes:
 
 ---
 
-Repository Structure
+## Repository Structure
 
 This structure reflects the infrastructure setup (infra) using Terraform and Kubernetes Manifests.
 
 ```bash
 .
+.
 ├── infra/
 │   ├── acces-enteries.tf        # Maps IAM Users/Roles to EKS Access Entries
-│   ├── acm/                     # modle for ACM Certificate management
-│   ├── eks/                     # module EKS Control Plane and Node Group definitions
+│   ├── acm/                     # (MODULE) AWS Certificate Manager configuration
+│   ├── eks/                     # (MODULE) EKS Control Plane and Node Group definitions
 │   ├── eks-blue-greee-runbook.md # Full step-by-step Blue/Green deployment operations guide
 │   ├── iam-users.tf             # IAM Users for lead & junior engineers
 │   ├── main.tf                  # Main Terraform configuration
 │   ├── providers.tf             # Terraform provider configuration
 │   ├── variables.tf             # Input variables for configuration
-│   └── vpc/                     # module VPC, subnets, routing, and networking for the EKS cluster
+│   └── vpc/                     # (MODULE) VPC, subnets, routing, and networking for the EKS cluster
 │
 └── manifests/
     ├── blue-bookinfo/
@@ -61,4 +62,36 @@ This structure reflects the infrastructure setup (infra) using Terraform and Kub
     └── rbac.yaml                # Kubernetes RBAC roles and role bindings
 ```
 
-## Follow up complete operational workflow is documented in: 📘 infra/eks-blue-greee-runbook.md
+## Configuration Variables (infra/terraform.tfvars)
+
+The following variables must be defined to configure the VPC, two EKS clusters (Blue/Green), and the necessary DNS settings. These values are critical inputs consumed by the Terraform modules (vpc/, eks/, acm/).
+
+```bash
+# AWS Credentials & Region
+aws_region          = "ap-southeast-1"
+aws_profile         = "eks-admin"
+
+# VPC Configuration (Inputs for 'vpc/' module)
+vpc_prefix          = "eks"
+vpc_environment     = "production"
+vpc_address_space   = "10.10.0.0/16"
+# Public subnets used for ALBs
+vpc_public_subnet_cidr  = ["10.10.1.0/24", "10.10.2.0/24"]
+# Private subnets used for EKS Worker Nodes
+vpc_private_subnet_cidr = ["10.10.101.0/24", "10.10.102.0/24"]
+
+# EKS Cluster & Node Group Configuration (Inputs for 'eks/' module)
+cluster_blue_name   = "eks-blue"
+cluster_green_name  = "eks-green"
+eks_version         = "1.33"
+node_instance_type  = "t3.medium"
+desired_capacity    = 2
+max_capacity        = 2
+min_capacity        = 2
+
+# DNS and ACM Configuration (Inputs for 'acm/' and ExternalDNS)
+acm_domain_name     = "hellocloud.tunlab.xyz"
+hosted_zone_domain_name = "tunlab.xyz"
+```
+----
+👉 Follow the complete operational guideline in: 📘 infra/eks-blue-green-runbook.md

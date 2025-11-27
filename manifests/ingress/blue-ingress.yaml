@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 
     # TLS (use ACM ARN) — replace value with your ACM ARN
-    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-southeast-1:767397836388:certificate/a9078a71-661f-4db7-939e-e6f58a40d74c"
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-southeast-1:<ACCOUNT_ID>:certificate/<CERT_ID>"
 
     # ExternalDNS annotations — IMPORTANT
     external-dns.alpha.kubernetes.io/hostname: hellocloud.tunlab.xyz

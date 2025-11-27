@@ -228,13 +228,12 @@ kubectl logs -n kube-system deployment/external-dns
 ## 5. Apply Ingress Resource and Configure ALB Address in Route 53
 ### I. Apply Ingress Resource
 ```bash
-# Apply the original Ingress for BLUE deployment (existing microservices)
-kubectl apply -f orginal-ingress.yaml 
+# Apply bookinfo blue/grenn ingress deployment (per cluster)    ### replace value with your ACM ARN
+kubectl apply -f blue-bookinfo.yaml
 
 # Verify that AWS Load Balancer Controller created an ALB
 kubectl get ingress bookinfo-ingress -n productpage -o wide
   ```
-
 
 
 # set green to 100 
