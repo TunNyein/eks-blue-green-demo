@@ -103,17 +103,17 @@ aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-
   ]
 }
 
-  ```
-  then create # IAM Policy
-
+```
+then create # IAM Policy
+```bash
   aws iam create-policy \
   --policy-name ExternalDNSPolicy \
   --policy-document file://external-dns-policy.json \
   --profile <your aws profile>
+```
 
-  ----
+----
 
-  ```
   ### III. Create IAM Role + Service Account (IRSA) for ALB and ExternaDNS in bouth cluster
   ```bash
 

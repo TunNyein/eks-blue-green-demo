@@ -1,0 +1,22 @@
+aws_region          = "ap-southeast-1"
+aws_profile         = "eks-admin"
+
+vpc_prefix          = "eks"
+vpc_environment     = "production"
+vpc_address_space   = "10.10.0.0/16"
+
+# Use at least two entries (AZs). The VPC module below uses the first two AZs.
+vpc_public_subnet_cidr  = ["10.10.1.0/24", "10.10.2.0/24"]
+vpc_private_subnet_cidr = ["10.10.101.0/24", "10.10.102.0/24"]
+
+cluster_blue_name   = "eks-blue"
+cluster_green_name  = "eks-green"
+eks_version         = "1.33"
+node_instance_type  = "t3.medium"
+desired_capacity    = 2
+max_capacity        = 2
+min_capacity        = 2
+
+acm_domain_name     = "hellocloud.tunlab.xyz"
+hosted_zone_domain_name = "tunlab.xyz"
+
