@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository demonstrates a Blue/Green deployment strategy on Amazon EKS using two separate clusters for version separation (Blue and Green). This architecture includes a privileged access model for developers and operators, managed via EKS Access Entries and Kubernetes RBAC.
+This repository demonstrates a Blue/Green deployment strategy on Amazon EKS using two separate clusters for version separation (Blue and Green). This architecture includes a privileged access model for lead-ops-engineer and junior-ops-engineer, managed via EKS Access Entries and Kubernetes RBAC.
 
 The project includes:
 
