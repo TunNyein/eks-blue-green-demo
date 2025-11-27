@@ -24,7 +24,7 @@ The project includes:
 
 ## Architecture
 
-![alt text](manifests/eks-blue-green-diagram-v2.png.png)
+![alt text](assets/eks-blue-green-diagram-v2.png.png)
 
 ---
 
